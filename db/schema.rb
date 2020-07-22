@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_23_214611) do
+ActiveRecord::Schema.define(version: 2020_08_03_162147) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -217,7 +217,6 @@ ActiveRecord::Schema.define(version: 2020_07_23_214611) do
     t.datetime "last_sign_in_at"
     t.index ["confirmation_token"], name: "index_email_addresses_on_confirmation_token", unique: true
     t.index ["email_fingerprint", "user_id"], name: "index_email_addresses_on_email_fingerprint_and_user_id", unique: true
-    t.index ["email_fingerprint"], name: "index_email_addresses_on_all_email_fingerprints"
     t.index ["email_fingerprint"], name: "index_email_addresses_on_email_fingerprint", unique: true, where: "(confirmed_at IS NOT NULL)"
     t.index ["user_id", "last_sign_in_at"], name: "index_email_addresses_on_user_id_and_last_sign_in_at", order: { last_sign_in_at: :desc }
   end
@@ -260,7 +259,6 @@ ActiveRecord::Schema.define(version: 2020_07_23_214611) do
     t.index ["access_token"], name: "index_identities_on_access_token", unique: true
     t.index ["session_uuid"], name: "index_identities_on_session_uuid", unique: true
     t.index ["user_id", "service_provider"], name: "index_identities_on_user_id_and_service_provider", unique: true
-    t.index ["user_id"], name: "index_identities_on_user_id"
     t.index ["uuid"], name: "index_identities_on_uuid", unique: true
   end
 
@@ -277,7 +275,6 @@ ActiveRecord::Schema.define(version: 2020_07_23_214611) do
     t.index ["host"], name: "index_job_runs_on_host"
     t.index ["job_name", "created_at"], name: "index_job_runs_on_job_name_and_created_at"
     t.index ["job_name", "finish_time"], name: "index_job_runs_on_job_name_and_finish_time"
-    t.index ["job_name"], name: "index_job_runs_on_job_name"
   end
 
   create_table "monthly_auth_counts", force: :cascade do |t|
@@ -320,7 +317,6 @@ ActiveRecord::Schema.define(version: 2020_07_23_214611) do
     t.datetime "updated_at", null: false
     t.datetime "made_default_at"
     t.index ["user_id", "made_default_at", "created_at"], name: "index_phone_configurations_on_made_default_at"
-    t.index ["user_id"], name: "index_phone_configurations_on_user_id"
   end
 
   create_table "piv_cac_configurations", force: :cascade do |t|
@@ -351,7 +347,6 @@ ActiveRecord::Schema.define(version: 2020_07_23_214611) do
     t.index ["name_zip_birth_year_signature"], name: "index_profiles_on_name_zip_birth_year_signature"
     t.index ["ssn_signature"], name: "index_profiles_on_ssn_signature"
     t.index ["user_id", "active"], name: "index_profiles_on_user_id_and_active", unique: true, where: "(active = true)"
-    t.index ["user_id"], name: "index_profiles_on_user_id"
   end
 
   create_table "proofing_components", force: :cascade do |t|
