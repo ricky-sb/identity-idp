@@ -96,8 +96,6 @@ module TwoFactorAuthentication
         redirect_to two_factor_options_url
       end
       reset_otp_session_data
-      # This next line can be removed after RC 116
-      user_session.delete(:mfa_device_remembered)
     end
     # rubocop:enable Metrics/AbcSize
   end
