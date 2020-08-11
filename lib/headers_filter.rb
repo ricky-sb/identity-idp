@@ -9,6 +9,7 @@ class HeadersFilter
   end
 
   def call(env)
+    j = 'testing'
     HEADERS_TO_DELETE.each { |header| env.delete(header) }
     app.call(env)
   end
