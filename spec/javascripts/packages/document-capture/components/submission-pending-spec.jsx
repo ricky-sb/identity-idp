@@ -8,6 +8,7 @@ describe('document-capture/components/submission-pending', () => {
 
     const heading = getByText('We are processing your images…');
 
+    expect(document.activeElement).to.equal(heading);
     expect(heading).to.be.ok();
   });
 });
