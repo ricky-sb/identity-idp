@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_03_211145) do
+ActiveRecord::Schema.define(version: 2020_08_11_144552) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -203,6 +203,16 @@ ActiveRecord::Schema.define(version: 2020_08_03_211145) do
     t.datetime "updated_at", null: false
     t.index ["request_token"], name: "index_doc_captures_on_request_token", unique: true
     t.index ["user_id"], name: "index_doc_captures_on_user_id", unique: true
+  end
+
+  create_table "document_capture_sessions", force: :cascade do |t|
+    t.string "uuid"
+    t.string "results_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_document_capture_sessions_on_user_id"
+    t.index ["uuid"], name: "index_document_capture_sessions_on_uuid"
   end
 
   create_table "email_addresses", force: :cascade do |t|
@@ -582,4 +592,5 @@ ActiveRecord::Schema.define(version: 2020_08_03_211145) do
     t.index ["user_id"], name: "index_webauthn_configurations_on_user_id"
   end
 
+  add_foreign_key "document_capture_sessions", "users"
 end
