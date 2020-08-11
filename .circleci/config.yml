@@ -24,6 +24,12 @@ executors:
           POSTGRES_USER: circleci
 
       - image: redis:4.0.1
+  ruby_node_only:
+    docker:
+      # Specify the Ruby version you desire here
+      - image: circleci/ruby:2.6.5-node-browsers
+        environment:
+          RAILS_ENV: test
 
 commands:
   bundle-yarn-install:
@@ -172,7 +178,7 @@ jobs:
             ./cc-test-reporter sum-coverage --output - --parts $CIRCLE_NODE_TOTAL coverage/codeclimate.*.json | ./cc-test-reporter upload-coverage --input -
   lints:
     working_directory: ~/identity-idp
-    executor: ruby_browsers
+    executor: ruby_node_only
     steps:
       - checkout
       - bundle-yarn-install
@@ -181,6 +187,27 @@ jobs:
           command: |
             yarn run lint
             bundle exec slim-lint app/views
+  standardrb-lint:
+    working_directory: ~/identity-idp
+    executor: ruby_node_only
+    steps:
+      - checkout
+      - bundle-yarn-install
+      - run:
+          name: Run StandardRB
+          command: |
+            # --name-only gives us only filenames and --diff-filter=d excludes deleted files
+            # so that we only run this linter on undeleted and files that have changed against
+            # origin/master.
+            #
+            # CircleCI doesn't have a target branch environment variable, but that would be
+            # the ideal diff target.
+            #
+            # The if check is used to avoid passing an empty string to standardrb
+            # because would that would run the checks on all files.
+            if [[ $(git diff --name-only --diff-filter=d origin/master '*.rb' '*.rake') ]]; then
+              git diff --name-only --diff-filter=d origin/master '*.rb' '*.rake' | xargs bundle exec standardrb
+            fi
   build-latest-container:
     working_directory: ~/identity-idp
     docker:
@@ -280,8 +307,12 @@ workflows:
   version: 2
   release:
     jobs:
-      - build
+      - standardrb-lint:
+          filters:
+            branches:
+              ignore: /^stages\/.*/
       - lints
+      - build
       - build-latest-dev-container:
           requires:
             - build
