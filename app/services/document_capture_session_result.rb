@@ -23,10 +23,10 @@ class DocumentCaptureSessionResult
       )
     end
 
-    def deserialize(_id, json)
+    def deserialize(id, json)
       data = JSON.parse(json)
       new(
-        id: data['id'],
+        id: id,
         success: data['success'],
         errors: data['errors'],
         pii: data['pii'],
