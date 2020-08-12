@@ -12,7 +12,7 @@ class DocumentCaptureSession < ApplicationRecord
       id: generate_result_id,
       success: doc_auth_response.success?,
       errors: doc_auth_response.errors,
-      pii: doc_auth_response.pii,
+      pii: doc_auth_response.pii_from_doc,
     )
     result.unload
   end
